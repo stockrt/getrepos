@@ -4,19 +4,21 @@ $LOAD_PATH.push File.expand_path('../../lib', __FILE__)
 require 'getrepos'
 require 'commander/import'
 
-program :name, 'Get Repos'
 program :version, GetRepos::VERSION
-program :description, 'Download content from repositories (Git/Tarball)'
+program :description, 'Download, extract and filter content from repositories (Git/Tarball)'
 
 never_trace!
 
 command :install do |c|
-  c.syntax = 'Get Repos install [options]'
-  c.summary = 'Install repositories'
-  c.description = 'desc'
-  c.example 'Downlaod and install repositories from repos.json', 'getrepos install repos.json'
+  c.syntax = 'getrepos install <file.json>'
+  c.summary = 'Download and install archives to local dir'
+  c.description = 'Download and install archives defined in <file.json>'
+  c.example 'Process URLs from repos.json', 'getrepos install repos.json'
   c.action do |args, options|
-    puts 'olar'
+    if args.empty?
+      command(:help).run(:install)
+      exit 1
+    end
   end
 end
 
