@@ -1,9 +1,9 @@
 require 'bundler/gem_tasks'
 
-# Default.
+# Default
 task :default => :help
 
-# Help.
+# Help
 desc 'Help'
 task :help do
   system('rake -T')
