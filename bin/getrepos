@@ -12,13 +12,21 @@ never_trace!
 command :install do |c|
   c.syntax = 'getrepos install <file.json>'
   c.summary = 'Download and install archives to local dir'
-  c.description = 'Download and install archives defined in <file.json>'
+  c.description = 'Download and install archive URLs defined in <file.json>'
   c.example 'Process URLs from repos.json', 'getrepos install repos.json'
   c.action do |args, options|
-    if args.empty?
+    if args.length != 1
       command(:help).run(:install)
       exit 1
     end
+
+    filename = args.first
+    if ! File.exists?(filename)
+      puts "ERR: File '#{filename}' not found"
+      exit 1
+    end
+
+    install_repos(filename)
   end
 end
 
