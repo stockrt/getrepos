@@ -1,0 +1,7 @@
+{"repos": [
+  {"name": "nginx", "version": "1.9.12", "url": "http://nginx.org/download/nginx-1.9.12.tar.gz"},
+  {"name": "luajit", "version": "2.1.0-beta2", "url": "http://luajit.org/download/LuaJIT-2.1.0-beta2.tar.gz"},
+  {"name": "ngx_http_auth_request", "version": "662785733552", "url": "http://mdounin.ru/hg/ngx_http_auth_request_module/archive/tip.tar.gz"},
+  {"name": "nginx-push-stream", "version": "0.5.1", "url": "https://github.com/wandenberg/nginx-push-stream-module.git"},
+  {"name": "ngx_cache_purge", "version": "2.3", "url": "https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz"}
+]}

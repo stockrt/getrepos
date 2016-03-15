@@ -1,0 +1,3 @@
+{"repos": [
+  {"name": "nginx", "version": "1.9.12", "x_url": "http://nginx.org/download/nginx-1.9.12.tar.gz"}
+]}
