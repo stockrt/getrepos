@@ -26,7 +26,7 @@ command :install do |c|
       exit 1
     end
 
-    install_repos(filename)
+    GetRepos.install_repos(filename)
   end
 end
 
