@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.push File.expand_path('../../lib', __FILE__)
 
+require 'json'
 require 'getrepos'
+require 'colorize'
 require 'commander/import'
 
 program :version, GetRepos::VERSION
@@ -16,13 +18,14 @@ command :install do |c|
   c.example 'Process URLs from repos.json', 'getrepos install repos.json'
   c.action do |args, options|
     if args.length != 1
+      puts 'Wrong number of arguments'.light_red
       command(:help).run(:install)
       exit 1
     end
 
     filename = args.first
     if ! File.exists?(filename)
-      puts "ERR: File '#{filename}' not found"
+      puts "File '#{filename}' not found".light_red
       exit 1
     end
 
