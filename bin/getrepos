@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.push File.expand_path('../../lib', __FILE__)
 
-require 'json'
 require 'getrepos'
+require 'uri'
+require 'json'
 require 'colorize'
+require 'open-uri'
 require 'commander/import'
 
 program :version, GetRepos::VERSION
