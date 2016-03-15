@@ -1,9 +1,8 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.push File.expand_path('../../lib', __FILE__)
 
-require 'rubygems'
-require 'commander/import'
 require 'getrepos'
+require 'commander/import'
 
 program :name, 'Get Repos'
 program :version, GetRepos::VERSION
