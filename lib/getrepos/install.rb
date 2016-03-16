@@ -20,8 +20,10 @@ module GetRepos
 
       puts 'Processing entry: '.light_cyan + repo.to_s
       if is_git_url?(repo[:url])
+        # Git
         install_git(repo)
       else
+        # Archive
         archive = URI(repo[:url]).path
         if archive.end_with?('.tar.gz')
           install_archive(repo, 'tar.gz')
@@ -57,6 +59,7 @@ module GetRepos
     dest_file = File.join('build', 'repos', repo[:name] + '-' + repo[:version] + '.' + ext)
     FileUtils.mkdir_p(dest_dir)
 
+    # Download
     if File.exists?(dest_file)
       puts "Already downloaded '#{repo[:url]}' to '#{dest_file}'".light_green
     else
@@ -64,17 +67,20 @@ module GetRepos
       IO.copy_stream(open(repo[:url]), dest_file)
     end
 
+    # Extract
+    ret = 0
     if ext == 'tar.gz'
-      %x(tar xzf #{dest_file} -C #{dest_dir})
+      ret = run_local("tar xzf '#{dest_file}' -C '#{dest_dir}'")
     elsif ext == 'tar.bz2'
-      %x(tar xjf #{dest_file} -C #{dest_dir})
+      ret = run_local("tar xjf '#{dest_file}' -C '#{dest_dir}'")
     elsif ext == 'tar.xz'
-      %x(tar xJf #{dest_file} -C #{dest_dir})
+      ret = run_local("tar xJf '#{dest_file}' -C '#{dest_dir}'")
     elsif ext == 'zip' || ext == 'jar' || ext == 'war' || ext == 'ear'
-      %x(unzip -o #{dest_file} -d #{dest_dir})
+      ret = run_local("unzip -o '#{dest_file}' -d '#{dest_dir}'")
     else
       puts "Unsupported file extension '#{ext}'".light_red
       exit 1
     end
+    exit ret if ret != 0
   end
 end
