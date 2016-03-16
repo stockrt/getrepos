@@ -57,17 +57,20 @@ module GetRepos
   def install_archive(repo, ext)
     dest_dir = File.join('build', 'repos', repo[:name] + '-' + repo[:version])
     dest_file = File.join('build', 'repos', repo[:name] + '-' + repo[:version] + '.' + ext)
-    FileUtils.mkdir_p(dest_dir)
 
     # Download
     if File.exists?(dest_file)
       puts "Already downloaded '#{repo[:url]}' to '#{dest_file}'".light_green
     else
       puts "Saving '#{repo[:url]}' to '#{dest_file}'".light_cyan
+      FileUtils.mkdir_p(File.dirname(dest_file))
       IO.copy_stream(open(repo[:url]), dest_file)
     end
 
     # Extract
+    puts "Extracting '#{dest_file}' to '#{dest_dir}'".light_cyan
+    FileUtils.rm_rf(dest_dir)
+    FileUtils.mkdir_p(dest_dir)
     ret = 0
     if ext == 'tar.gz'
       ret = run_local("tar xzf '#{dest_file}' -C '#{dest_dir}'")
