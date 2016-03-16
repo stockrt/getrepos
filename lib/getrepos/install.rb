@@ -4,7 +4,7 @@ module GetRepos
   module_function
 
   def install(filename)
-    FileUtils.mkdir_p('build')
+    FileUtils.mkdir_p('build/repos')
     repos = JSON.parse(open(filename).read, symbolize_names: true)
 
     unless is_valid_json_root?(repos)
@@ -18,6 +18,7 @@ module GetRepos
         exit 1
       end
 
+      puts
       puts 'Processing entry: '.light_cyan + repo.to_s
       if is_git_url?(repo[:url])
         # Git
@@ -50,8 +51,23 @@ module GetRepos
   def install_git(repo)
     dest_dir = File.join('build', 'repos', repo[:name] + '-' + repo[:version])
     gitbare_dest_dir = File.join('build', '.gitbare', repo[:name])
-    puts dest_dir
-    puts gitbare_dest_dir
+
+    # Clone
+    if File.exists?("#{gitbare_dest_dir}/HEAD")
+      puts "Already cloned '#{repo[:url]}' to '#{gitbare_dest_dir}'".light_green
+    else
+      puts "Cloning '#{repo[:url]}' to '#{gitbare_dest_dir}'".light_cyan
+      ret = run_local("git clone -q --bare '#{repo[:url]}' '#{gitbare_dest_dir}'")
+      exit ret if ret != 0
+    end
+
+    # Extract
+    puts "Extracting '#{gitbare_dest_dir}' to '#{dest_dir}'".light_cyan
+    FileUtils.rm_rf(dest_dir)
+    FileUtils.mkdir_p(dest_dir)
+    ret = run_local("cd #{gitbare_dest_dir} &&
+                    git archive --prefix='#{dest_dir}/' '#{repo[:version]}' -- #{repo[:path]} | tar xf - -C '../../../'")
+    exit ret if ret != 0
   end
 
   def install_archive(repo, ext)
