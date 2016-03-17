@@ -72,30 +72,30 @@ module GetRepos
 
   def install_archive(repo, ext)
     dest_dir = File.join('build', 'repos', repo[:name] + '-' + repo[:version])
-    dest_file = File.join('build', 'repos', repo[:name] + '-' + repo[:version] + '.' + ext)
+    archive_dest_file = File.join('build', '.archive', repo[:name] + '-' + repo[:version] + '.' + ext)
 
     # Download
-    if File.exists?(dest_file)
-      puts "Already downloaded '#{repo[:url]}' to '#{dest_file}'".light_green
+    if File.exists?(archive_dest_file)
+      puts "Already downloaded '#{repo[:url]}' to '#{archive_dest_file}'".light_green
     else
-      puts "Saving '#{repo[:url]}' to '#{dest_file}'".light_cyan
-      FileUtils.mkdir_p(File.dirname(dest_file))
-      IO.copy_stream(open(repo[:url]), dest_file)
+      puts "Saving '#{repo[:url]}' to '#{archive_dest_file}'".light_cyan
+      FileUtils.mkdir_p(File.dirname(archive_dest_file))
+      IO.copy_stream(open(repo[:url]), archive_dest_file)
     end
 
     # Extract
-    puts "Extracting '#{dest_file}' to '#{dest_dir}'".light_cyan
+    puts "Extracting '#{archive_dest_file}' to '#{dest_dir}'".light_cyan
     FileUtils.rm_rf(dest_dir)
     FileUtils.mkdir_p(dest_dir)
     ret = 0
     if ext == 'tar.gz'
-      ret = run_local("tar xzf '#{dest_file}' -C '#{dest_dir}'")
+      ret = run_local("tar xzf '#{archive_dest_file}' -C '#{dest_dir}' #{repo[:path]}")
     elsif ext == 'tar.bz2'
-      ret = run_local("tar xjf '#{dest_file}' -C '#{dest_dir}'")
+      ret = run_local("tar xjf '#{archive_dest_file}' -C '#{dest_dir}' #{repo[:path]}")
     elsif ext == 'tar.xz'
-      ret = run_local("tar xJf '#{dest_file}' -C '#{dest_dir}'")
+      ret = run_local("tar xJf '#{archive_dest_file}' -C '#{dest_dir}' #{repo[:path]}")
     elsif ext == 'zip' || ext == 'jar' || ext == 'war' || ext == 'ear'
-      ret = run_local("unzip -o '#{dest_file}' -d '#{dest_dir}'")
+      ret = run_local("unzip -o '#{archive_dest_file}' #{repo[:path]} -d '#{dest_dir}'")
     else
       puts "Unsupported file extension '#{ext}'".light_red
       exit 1
