@@ -13,10 +13,35 @@ program :description, 'Download, extract and filter content from repositories (G
 
 never_trace!
 
+command :init do |c|
+  c.syntax = 'getrepos init <file.json> [-f]'
+  c.summary = 'Create sample JSON'
+  c.description = 'Create <file.json> with sample configuration'
+  c.example 'Generate repos.json', 'getrepos init repos.json'
+  c.example 'Overwrite repos.json', 'getrepos init repos.json -f'
+  c.option '-f', '--force', 'Force file overwrite'
+
+  c.action do |args, options|
+    if args.length != 1
+      puts 'Wrong number of arguments'.light_red
+      command(:help).run(:init)
+      exit 1
+    end
+
+    filename = args.first
+    if File.exists?(filename) && ! options.force
+      puts "File '#{filename}' already exists (use -f to overwrite)".light_red
+      exit 1
+    end
+
+    GetRepos.init(filename)
+  end
+end
+
 command :install do |c|
   c.syntax = 'getrepos install <file.json>'
-  c.summary = 'Download and install archives to local dir'
-  c.description = 'Download and install archive URLs defined in <file.json>'
+  c.summary = 'Download and install archives'
+  c.description = 'Download and install archives from URLs defined in <file.json>'
   c.example 'Process URLs from repos.json', 'getrepos install repos.json'
   c.action do |args, options|
     if args.length != 1
