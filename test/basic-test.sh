@@ -6,7 +6,7 @@
 
 describe "Basic usage"
 
-validate() {
+validate_build_repo() {
     # Nginx
     test -f build/repos/nginx-1.9.12/configure
     # Deps
@@ -49,21 +49,32 @@ it_display_version() {
     ../bin/getrepos -v | grep -E "getrepos [[:digit:]]"
 }
 
+it_init() {
+    ../bin/getrepos init init.json
+    test -f init.json
+}
+
+it_init_force() {
+    ../bin/getrepos init init.json
+    test -f init.json
+    ../bin/getrepos init init.json -f
+}
+
+it_init_is_valid_json() {
+    ../bin/getrepos init init.json
+    grep nginx-push-stream init.json
+    ./helper/valid_json.rb init.json
+}
+
+it_init_generate_valid_build_repo() {
+    ../bin/getrepos init init.json
+    ../bin/getrepos install init.json
+    validate_build_repo
+}
+
 it_install() {
     ../bin/getrepos install repos-basic.json
-    validate
-}
-
-it_init() {
-    ../bin/getrepos init init.json -f
-    test -f init.json
-    grep nginx-push-stream init.json
-}
-
-it_init_is_valid() {
-    ../bin/getrepos init init.json -f
-    ../bin/getrepos install init.json
-    validate
+    validate_build_repo
 }
 
 # EOF

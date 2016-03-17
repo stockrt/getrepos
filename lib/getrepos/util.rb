@@ -9,12 +9,14 @@ end
 
 def is_valid_json_repo?(data)
   return_flag = true
+
   [:name, :version, :url].each do |key|
     if data[key].nil?
       puts "Missing required key \"#{key}\"".light_red
       return_flag = false
     end
   end
+
   return return_flag
 end
 
