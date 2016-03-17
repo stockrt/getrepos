@@ -6,16 +6,6 @@
 
 describe "Basic usage"
 
-before() {
-    rm -f init.json
-    rm -rf build
-}
-
-after() {
-    rm -f init.json
-    rm -rf build
-}
-
 validate() {
     # Nginx
     test -f build/repos/nginx-1.9.12/configure
@@ -37,6 +27,26 @@ validate() {
     test -d build/repos/lua-resty-dns-v0.15/lib/resty
     test -d build/repos/lua-resty-redis-v0.22/lib/resty
     test -d build/repos/lua-resty-upstream-healthcheck-v0.04/lib/resty
+}
+
+before() {
+    rm -f init.json
+    rm -rf build
+}
+
+after() {
+    rm -f init.json
+    rm -rf build
+}
+
+it_display_help() {
+    ../bin/getrepos | grep "help documentation"
+    ../bin/getrepos init | grep "getrepos init"
+    ../bin/getrepos install | grep "getrepos install"
+}
+
+it_display_version() {
+    ../bin/getrepos -v | grep -E "getrepos [[:digit:]]"
 }
 
 it_install() {
