@@ -13,6 +13,7 @@
   {"name": "set-misc-nginx", "version": "v0.30", "url": "https://github.com/openresty/set-misc-nginx-module.git"},
   {"name": "ngx_cache_purge", "version": "2.3", "url": "https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz"},
   {"name": "nginx-push-stream", "version": "0.5.1", "url": "https://github.com/wandenberg/nginx-push-stream-module.git"},
+  {"name": "ngx_http_auth_request", "version": "662785733552", "url": "http://mdounin.ru/hg/ngx_http_auth_request_module/archive/tip.tar.gz", "path": "ngx_http_auth_request_module-662785733552"},
   // Lua modules
   {"name": "lua-resty-core", "version": "v0.1.5", "url": "https://github.com/openresty/lua-resty-core.git"},
   {"name": "lua-resty-dns", "version": "v0.15", "url": "https://github.com/openresty/lua-resty-dns.git"},
