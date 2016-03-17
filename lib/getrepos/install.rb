@@ -54,7 +54,9 @@ module GetRepos
 
     # Clone
     if File.exists?("#{gitbare_dest_dir}/HEAD")
-      puts "Already cloned '#{repo[:url]}' to '#{gitbare_dest_dir}'".light_green
+      puts "Updating cloned '#{repo[:url]}' inside '#{gitbare_dest_dir}'".light_green
+      ret = run_local("cd #{gitbare_dest_dir} && git fetch -q")
+      exit ret if ret != 0
     else
       puts "Cloning '#{repo[:url]}' to '#{gitbare_dest_dir}'".light_cyan
       ret = run_local("git clone -q --bare '#{repo[:url]}' '#{gitbare_dest_dir}'")
