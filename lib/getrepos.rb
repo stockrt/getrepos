@@ -1,3 +1,3 @@
-require 'getrepos/version'
-require 'getrepos/install'
 require 'getrepos/init'
+require 'getrepos/install'
+require 'getrepos/version'
