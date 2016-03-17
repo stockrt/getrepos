@@ -1,0 +1,5 @@
+{"repos": [
+  // Filter path "patches"
+  // Use this path as root from the repo, excluding any other outside resource
+  {"name": "openresty", "version": "v1.9.7.4", "url": "https://github.com/openresty/openresty.git", "path": "patches"}
+]}
