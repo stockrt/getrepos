@@ -4,7 +4,7 @@
 # https://github.com/bmizerany/roundup
 # wget https://raw.githubusercontent.com/bmizerany/roundup/master/roundup.sh
 
-describe "Basic usage"
+describe "Basic usage and sample config JSON"
 
 validate_build_repo() {
     # Nginx
@@ -13,7 +13,7 @@ validate_build_repo() {
     test -f build/repos/luajit-2.1.0-beta2/Makefile
     test -f build/repos/lua-cjson-2.1.0.3/Makefile
     test -f build/repos/hiredis-v0.13.3/Makefile
-    test -f build/repos/libmaxminddb-1.1.4/Makefile.in
+    test -f build/repos/libmaxminddb-1.1.4/configure
     # Native modules
     test -f build/repos/lua-nginx-v0.10.2/config
     test -f build/repos/lua-upstream-nginx-v0.05/config
@@ -73,7 +73,7 @@ it_init_generate_valid_build_repo() {
 }
 
 it_install() {
-    ../bin/getrepos install repos-basic.json
+    ../bin/getrepos install repos-basic-usage.json
     validate_build_repo
 }
 
