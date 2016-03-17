@@ -37,3 +37,10 @@ def run_local(command)
 
   return exit_status
 end
+
+def prep_dest_dir(dest_dir)
+  FileUtils.rm_rf('build/.tmp')
+  FileUtils.mkdir_p('build/.tmp')
+  FileUtils.rm_rf(dest_dir)
+  FileUtils.mkdir_p(File.dirname(dest_dir))
+end

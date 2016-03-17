@@ -49,8 +49,8 @@ module GetRepos
   end
 
   def install_git(repo)
-    dest_dir = File.join('build', 'repos', repo[:name] + '-' + repo[:version])
-    gitbare_dest_dir = File.join('build', '.gitbare', repo[:name])
+    dest_dir = "build/repos/#{repo[:name]}-#{repo[:version]}"
+    gitbare_dest_dir = "build/.gitbare/#{repo[:name]}"
 
     # Clone
     if File.exists?("#{gitbare_dest_dir}/HEAD")
@@ -62,17 +62,17 @@ module GetRepos
     end
 
     # Extract
-    puts "Extracting '#{gitbare_dest_dir}' to '#{dest_dir}'".light_cyan
-    FileUtils.rm_rf(dest_dir)
-    FileUtils.mkdir_p(dest_dir)
+    puts "Extracting and filtering '#{gitbare_dest_dir}' to '#{dest_dir}'".light_cyan
+    prep_dest_dir(dest_dir)
     ret = run_local("cd #{gitbare_dest_dir} &&
-                    git archive --prefix='#{dest_dir}/' '#{repo[:version]}' -- #{repo[:path]} | tar xf - -C '../../../'")
+                    git archive '#{repo[:version]}' -- #{repo[:path]} | tar xf - -C '../../.tmp/'")
     exit ret if ret != 0
+    FileUtils.mv("build/.tmp/#{repo[:path]}", dest_dir)
   end
 
   def install_archive(repo, ext)
-    dest_dir = File.join('build', 'repos', repo[:name] + '-' + repo[:version])
-    archive_dest_file = File.join('build', '.archive', repo[:name] + '-' + repo[:version] + '.' + ext)
+    dest_dir = "build/repos/#{repo[:name]}-#{repo[:version]}"
+    archive_dest_file = "build/.archive/#{repo[:name]}-#{repo[:version]}.#{ext}"
 
     # Download
     if File.exists?(archive_dest_file)
@@ -84,22 +84,28 @@ module GetRepos
     end
 
     # Extract
-    puts "Extracting '#{archive_dest_file}' to '#{dest_dir}'".light_cyan
-    FileUtils.rm_rf(dest_dir)
-    FileUtils.mkdir_p(dest_dir)
+    puts "Extracting and filtering '#{archive_dest_file}' to '#{dest_dir}'".light_cyan
+    prep_dest_dir(dest_dir)
     ret = 0
     if ext == 'tar.gz'
-      ret = run_local("tar xzf '#{archive_dest_file}' -C '#{dest_dir}' #{repo[:path]}")
+      ret = run_local("tar xzf '#{archive_dest_file}' -C 'build/.tmp' #{repo[:path]}")
     elsif ext == 'tar.bz2'
-      ret = run_local("tar xjf '#{archive_dest_file}' -C '#{dest_dir}' #{repo[:path]}")
+      ret = run_local("tar xjf '#{archive_dest_file}' -C 'build/.tmp' #{repo[:path]}")
     elsif ext == 'tar.xz'
-      ret = run_local("tar xJf '#{archive_dest_file}' -C '#{dest_dir}' #{repo[:path]}")
+      ret = run_local("tar xJf '#{archive_dest_file}' -C 'build/.tmp' #{repo[:path]}")
     elsif ext == 'zip' || ext == 'jar' || ext == 'war' || ext == 'ear'
-      ret = run_local("unzip -o '#{archive_dest_file}' #{repo[:path]} -d '#{dest_dir}'")
+      ret = run_local("unzip -o '#{archive_dest_file}' #{repo[:path]} -d 'build/.tmp'")
     else
       puts "Unsupported file extension '#{ext}'".light_red
       exit 1
     end
     exit ret if ret != 0
+    # Was the archive expanded to the usual directory 'name-version'?
+    archive_usual_dir = "build/.tmp/#{repo[:name]}-#{repo[:version]}/#{repo[:path]}"
+    if File.directory?(archive_usual_dir)
+      FileUtils.mv(archive_usual_dir, dest_dir)
+    else
+      FileUtils.mv("build/.tmp/#{repo[:path]}", dest_dir)
+    end
   end
 end
