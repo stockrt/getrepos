@@ -59,7 +59,7 @@ module GetRepos
       exit ret if ret != 0
     else
       puts "Cloning '#{repo[:url]}' to '#{gitbare_dest_dir}'".light_cyan
-      ret = run_local("git clone -q --bare '#{repo[:url]}' '#{gitbare_dest_dir}'")
+      ret = run_local("git clone -q --mirror '#{repo[:url]}' '#{gitbare_dest_dir}'")
       exit ret if ret != 0
     end
 
