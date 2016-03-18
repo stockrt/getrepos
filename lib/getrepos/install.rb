@@ -67,9 +67,9 @@ module GetRepos
     puts "Extracting and filtering '#{gitbare_dest_dir}' to '#{dest_dir}'".light_cyan
     prep_dest_dir(dest_dir)
     ret = run_local("cd #{gitbare_dest_dir} &&
-                    git archive '#{repo[:version]}' -- #{repo[:path]} | tar xf - -C '../../.tmp/'")
+                    git archive '#{repo[:version]}' -- #{repo[:path]} | tar xf - -C '../../.tmprepo/'")
     exit ret if ret != 0
-    FileUtils.mv("build/.tmp/#{repo[:path]}", dest_dir)
+    FileUtils.mv("build/.tmprepo/#{repo[:path]}", dest_dir)
   end
 
   def install_archive(repo, ext)
@@ -90,24 +90,24 @@ module GetRepos
     prep_dest_dir(dest_dir)
     ret = 0
     if ext == 'tar.gz'
-      ret = run_local("tar xzf '#{archive_dest_file}' -C 'build/.tmp' #{repo[:path]}")
+      ret = run_local("tar xzf '#{archive_dest_file}' -C 'build/.tmprepo/'")
     elsif ext == 'tar.bz2'
-      ret = run_local("tar xjf '#{archive_dest_file}' -C 'build/.tmp' #{repo[:path]}")
+      ret = run_local("tar xjf '#{archive_dest_file}' -C 'build/.tmprepo/'")
     elsif ext == 'tar.xz'
-      ret = run_local("tar xJf '#{archive_dest_file}' -C 'build/.tmp' #{repo[:path]}")
+      ret = run_local("tar xJf '#{archive_dest_file}' -C 'build/.tmprepo/'")
     elsif ext == 'zip' || ext == 'jar' || ext == 'war' || ext == 'ear'
-      ret = run_local("unzip -o '#{archive_dest_file}' #{repo[:path]} -d 'build/.tmp'")
+      ret = run_local("unzip -o '#{archive_dest_file}' -d 'build/.tmprepo/'")
     else
       puts "Unsupported file extension '#{ext}'".light_red
       exit 1
     end
     exit ret if ret != 0
     # Was the archive expanded to the usual directory 'name-version'?
-    archive_usual_dir = "build/.tmp/#{repo[:name]}-#{repo[:version]}/#{repo[:path]}"
+    archive_usual_dir = "build/.tmprepo/#{repo[:name]}-#{repo[:version]}/#{repo[:path]}"
     if File.directory?(archive_usual_dir)
       FileUtils.mv(archive_usual_dir, dest_dir)
     else
-      FileUtils.mv("build/.tmp/#{repo[:path]}", dest_dir)
+      FileUtils.mv("build/.tmprepo/#{repo[:path]}", dest_dir)
     end
   end
 end
