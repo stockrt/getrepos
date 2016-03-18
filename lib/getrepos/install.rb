@@ -28,6 +28,8 @@ module GetRepos
         archive = URI(repo[:url]).path
         if archive.end_with?('.tar.gz')
           install_archive(repo, 'tar.gz')
+        elsif archive.end_with?('.tgz')
+          install_archive(repo, 'tgz')
         elsif archive.end_with?('.tar.bz2')
           install_archive(repo, 'tar.bz2')
         elsif archive.end_with?('.tar.xz')
@@ -89,7 +91,7 @@ module GetRepos
     puts "Extracting and filtering '#{archive_dest_file}' to '#{dest_dir}'".light_cyan
     prep_dest_dir(dest_dir)
     ret = 0
-    if ext == 'tar.gz'
+    if ext == 'tar.gz' || ext == 'tgz'
       ret = run_local("tar xzf '#{archive_dest_file}' -C 'build/.tmprepo/'")
     elsif ext == 'tar.bz2'
       ret = run_local("tar xjf '#{archive_dest_file}' -C 'build/.tmprepo/'")
