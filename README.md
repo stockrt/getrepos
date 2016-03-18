@@ -144,11 +144,9 @@ build
     ├── lua-upstream-nginx-v0.05
     ├── luajit-2.1.0-beta2
     ├── nginx-1.9.12
-    ├── nginx-aaa-v0.9.1
     ├── nginx-push-stream-0.5.1
     ├── ngx_cache_purge-2.3
     ├── ngx_http_auth_request-662785733552
-    ├── pcre-8.38
     ├── redis2-nginx-v0.12
     └── set-misc-nginx-v0.30
 ```
